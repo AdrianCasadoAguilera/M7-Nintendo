@@ -1,23 +1,32 @@
 package com.project.controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.project.UtilsViews;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.net.URI;
 
 public class Controller implements Initializable {
 
@@ -25,12 +34,17 @@ public class Controller implements Initializable {
     private VBox listBox = new VBox();
     @FXML
     private VBox contentBox = new VBox();
+    @FXML
+    private Button charButton = new Button();
+    @FXML
+    private VBox mainBox = new VBox();
 
     @FXML
     private ChoiceBox<String> choice = new ChoiceBox<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         choice.getItems().addAll(new String[]{"Personatges","Jocs","Consoles"});
         choice.setValue("Personatges");
 
@@ -84,6 +98,107 @@ public class Controller implements Initializable {
         }
         
     }
+    
+
+    @FXML
+    public void setCharacters(){
+        try {
+            MobileListController controller = (MobileListController)UtilsViews.getController("List");
+            
+            StringBuilder jsonTxt = new StringBuilder();
+            Scanner scan = new Scanner(new InputStreamReader(new FileInputStream(new File("./src/main/resources/assets/data/personatges.json"))));
+            while(scan.hasNext()){
+                jsonTxt.append(scan.nextLine());
+            }
+
+            // Convertim el JSON a un objecte JSONArray
+            JSONArray itemsJson = new JSONArray(jsonTxt.toString());
+            
+            controller.clear();
+
+            for(Object itemObj : itemsJson){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/assets/layouts/listLayout.fxml"));
+                Parent elementTemplate = loader.load();
+                ListController elementController = (ListController)loader.getController();
+                URL imageURL = getClass().getResource("/assets/images/"+((JSONObject)itemObj).getString("imatge"));
+                elementController.setPhoto(imageURL);
+                elementController.setText(((JSONObject)itemObj).getString("nom"));
+
+                controller.add(elementTemplate);
+            }
+
+            UtilsViews.setViewAnimating("List");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
+        
+    }
+    @FXML
+    public void setGames(){
+        try {
+            MobileListController controller = (MobileListController)UtilsViews.getController("List");
+            
+            StringBuilder jsonTxt = new StringBuilder();
+            Scanner scan = new Scanner(new InputStreamReader(new FileInputStream(new File("./src/main/resources/assets/data/jocs.json"))));
+            while(scan.hasNext()){
+                jsonTxt.append(scan.nextLine());
+            }
+
+            // Convertim el JSON a un objecte JSONArray
+            JSONArray itemsJson = new JSONArray(jsonTxt.toString());
+
+            controller.clear();
+
+            for(Object itemObj : itemsJson){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/assets/layouts/listLayout.fxml"));
+                Parent elementTemplate = loader.load();
+                ListController elementController = (ListController)loader.getController();
+                URL imageURL = getClass().getResource("/assets/images/"+((JSONObject)itemObj).getString("imatge"));
+                elementController.setPhoto(imageURL);
+                elementController.setText(((JSONObject)itemObj).getString("nom"));
+
+                controller.add(elementTemplate);
+            }
+
+            UtilsViews.setViewAnimating("List");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void setConsoles(){
+        try {
+            MobileListController controller = (MobileListController)UtilsViews.getController("List");
+            
+            StringBuilder jsonTxt = new StringBuilder();
+            Scanner scan = new Scanner(new InputStreamReader(new FileInputStream(new File("./src/main/resources/assets/data/consoles.json"))));
+            while(scan.hasNext()){
+                jsonTxt.append(scan.nextLine());
+            }
+
+            // Convertim el JSON a un objecte JSONArray
+            JSONArray itemsJson = new JSONArray(jsonTxt.toString());
+
+            controller.clear();
+
+            for(Object itemObj : itemsJson){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/assets/layouts/listLayout.fxml"));
+                Parent elementTemplate = loader.load();
+                ListController elementController = (ListController)loader.getController();
+                URL imageURL = getClass().getResource("/assets/images/"+((JSONObject)itemObj).getString("imatge"));
+                elementController.setPhoto(imageURL);
+                elementController.setText(((JSONObject)itemObj).getString("nom"));
+
+                controller.add(elementTemplate);
+            }
+
+            UtilsViews.setViewAnimating("List");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void itemSelected(Parent item, JSONObject itemInfo){
         // Eliminem la selecció de tots els elements
@@ -125,8 +240,6 @@ public class Controller implements Initializable {
         }catch(IOException e){
             e.printStackTrace();
         }
-        
-        
     }
 }
 

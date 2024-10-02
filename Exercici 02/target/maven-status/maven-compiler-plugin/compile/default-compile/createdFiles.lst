@@ -1,6 +1,9 @@
 com\project\Main.class
-com\project\controllers\ListController.class
+com\project\controllers\MobileListController.class
 com\project\controllers\Controller.class
-com\project\controllers\CharInfoController.class
 com\project\controllers\ConsoleInfoController.class
 com\project\controllers\GameInfoController.class
+com\project\controllers\ListController.class
+com\project\Main$1.class
+com\project\controllers\CharInfoController.class
+com\project\UtilsViews.class

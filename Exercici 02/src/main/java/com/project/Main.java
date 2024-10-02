@@ -1,8 +1,8 @@
 package com.project;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -15,15 +15,32 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        // Carrega la vista inicial des del fitxer FXML
-        Parent root = FXMLLoader.load(getClass().getResource("/assets/layouts/mainLayout.fxml"));
-        Scene scene = new Scene(root);
+        UtilsViews.parentContainer.setStyle("-fx-font: 14 arial;");
+        UtilsViews.addView(getClass(), "Desktop", "/assets/layouts/mainLayout.fxml");
+        UtilsViews.addView(getClass(), "Mobile", "/assets/layouts/mobileLayout.fxml");
+        UtilsViews.addView(getClass(), "List", "/assets/layouts/mobileLayouts/mobileListLayout.fxml");
+
+        Scene scene = new Scene(UtilsViews.parentContainer);
 
         stage.setScene(scene);
         stage.setTitle("Nintendo DB");
         stage.setWidth(WINDOW_WIDTH);
         stage.setHeight(WINDOW_HEIGHT);
         stage.show();
+
+        stage.widthProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                if(stage.getWidth()<400){
+                    UtilsViews.setViewAnimating("Mobile");
+                }else{
+                    UtilsViews.setViewAnimating("Desktop");
+                }
+            }
+            
+        });
+        
 
         // Afegeix una icona només si no és un Mac
         if (!System.getProperty("os.name").contains("Mac")) {
